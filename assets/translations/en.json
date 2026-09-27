@@ -3,5 +3,8 @@
     "add_name_picture": "Add your name and profile picture",
     "full_name": "Full Name",
     "continueButton": "Continue",
-    "name_hint": "Enter your name"
+    "name_hint": "Enter your name",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "change_photo": "Change Photo"
 }

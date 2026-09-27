@@ -3,5 +3,8 @@
     "add_name_picture": "أضف اسمك وصورتك الشخصية",
     "full_name": "الاسم بالكامل",
     "continueButton": "متابعة",
-    "name_hint": "ادخل اسمك"
+    "name_hint": "ادخل اسمك",
+    "camera": "الكاميرا",
+    "gallery": "المعرض",
+    "change_photo": "تغيير الصورة"
 }

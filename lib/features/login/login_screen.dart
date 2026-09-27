@@ -1,9 +1,30 @@
+import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:to_do_app/core/widgets/custom_button.dart';
+import 'package:to_do_app/gen/locale_keys.g.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final picker = ImagePicker();
+  XFile? photo;
+  pickImageFromCamera() async {
+    photo = await picker.pickImage(source: ImageSource.camera);
+    setState(() {});
+  }
+
+  pickImageFromGallery() async {
+    photo = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,16 +38,51 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Center(
-                child: CircleAvatar(
-                  radius: 32,
-                  backgroundColor: Color(0xffe8ecf5),
-                  child: Icon(Icons.person, color: Colors.blue, size: 32),
+                child: InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) => Padding(
+                        padding: EdgeInsets.all(18.0.r),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomButton(
+                              title: 'Camera'.tr(),
+                              ontap: () {
+                                pickImageFromCamera();
+                                Navigator.pop(context);
+                              },
+                            ),
+                            20.verticalSpace,
+                            CustomButton(
+                              title: 'Gallary'.tr(),
+                              ontap: () {
+                                pickImageFromGallery();
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 32,
+                    backgroundColor: Color(0xffe8ecf5),
+                    backgroundImage: photo != null
+                        ? Image.file(File(photo?.path ?? "")).image
+                        : null,
+                    child: photo == null
+                        ? Icon(Icons.person, color: Colors.blue, size: 32)
+                        : null,
+                  ),
                 ),
               ),
               15.verticalSpace,
               Center(
                 child: Text(
-                  'create_profile'.tr(),
+                  LocaleKeys.create_profile.tr(),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
@@ -37,7 +93,7 @@ class LoginScreen extends StatelessWidget {
               5.verticalSpace,
               Center(
                 child: Text(
-                  'add_name_picture'.tr(),
+                  LocaleKeys.add_name_picture.tr(),
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
@@ -47,7 +103,7 @@ class LoginScreen extends StatelessWidget {
               ),
               15.verticalSpace,
               Text(
-                'full_name'.tr(),
+                LocaleKeys.full_name.tr(),
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -55,27 +111,25 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               5.verticalSpace,
-              TextField(
+              TextFormField(
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'name_hint'.tr(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade300,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: LocaleKeys.name_hint.tr(),
                 ),
               ),
               20.verticalSpace,
               Center(
-                child: SizedBox(
-                  width: 230.w,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Text('continueButton'.tr()),
-                  ),
+                child: CustomButton(
+                  title: LocaleKeys.continueButton.tr(),
+                  ontap: () {},
                 ),
               ),
               IconButton(

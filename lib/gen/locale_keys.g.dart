@@ -2,10 +2,11 @@
 
 // ignore_for_file: constant_identifier_names
 
-abstract class LocaleKeys {
+abstract class  LocaleKeys {
   static const create_profile = 'create_profile';
   static const add_name_picture = 'add_name_picture';
   static const full_name = 'full_name';
-  static const continueButton = 'Continue';
+  static const continueButton = 'continueButton';
   static const name_hint = 'name_hint';
+
 }
