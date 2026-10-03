@@ -2,8 +2,13 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:to_do_app/core/utils/app_constant.dart';
 import 'package:to_do_app/core/widgets/custom_button.dart';
+import 'package:to_do_app/core/widgets/custom_text_feild.dart';
+import 'package:to_do_app/features/home/home_screen.dart';
+import 'package:to_do_app/features/login/data/user_model.dart';
 import 'package:to_do_app/gen/locale_keys.g.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,10 +31,24 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {});
   }
 
+  saveUserData(UserModel user) {
+    Hive.box<UserModel>(AppConstant.userBox)
+        .put(AppConstant.currentUser, user)
+        .then((value) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        })
+        .catchError((error) {
+          print('error');
+        });
+  }
+
+  var nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xfff5f7fb),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.0),
@@ -48,16 +67,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             CustomButton(
-                              title: 'Camera'.tr(),
-                              ontap: () {
+                              title: LocaleKeys.camera.tr(),
+                              onTap: () {
                                 pickImageFromCamera();
                                 Navigator.pop(context);
                               },
                             ),
                             20.verticalSpace,
                             CustomButton(
-                              title: 'Gallary'.tr(),
-                              ontap: () {
+                              title: LocaleKeys.gallery.tr(),
+                              onTap: () {
                                 pickImageFromGallery();
                                 Navigator.pop(context);
                               },
@@ -111,25 +130,43 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               5.verticalSpace,
-              TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey.shade300,
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: LocaleKeys.name_hint.tr(),
-                ),
+
+              CustomTextFeild(
+                nameController: nameController,
+                hintText: LocaleKeys.name.tr(),
               ),
               20.verticalSpace,
               Center(
                 child: CustomButton(
                   title: LocaleKeys.continueButton.tr(),
-                  ontap: () {},
+                  onTap: () {
+                    if (photo == null) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(LocaleKeys.error.tr()),
+                          content: Text(LocaleKeys.image_required.tr()),
+                        ),
+                      );
+                      return;
+                    }
+                    if (nameController.text.isEmpty) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text(LocaleKeys.error.tr()),
+                          content: Text(LocaleKeys.name_required.tr()),
+                        ),
+                      );
+                      return;
+                    }
+                    saveUserData(
+                      UserModel(
+                        name: nameController.text,
+                        image: photo?.path ?? "",
+                      ),
+                    );
+                  },
                 ),
               ),
               IconButton(

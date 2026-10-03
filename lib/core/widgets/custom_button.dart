@@ -3,13 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomButton extends StatelessWidget {
   final String title;
-  final void Function()? ontap;
-  const CustomButton({super.key, required this.title, this.ontap});
+  final void Function()? onTap;
+  const CustomButton({super.key, required this.title, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: ontap,
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.symmetric(vertical: 17.h),
