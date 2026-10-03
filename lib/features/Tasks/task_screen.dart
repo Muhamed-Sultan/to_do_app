@@ -71,7 +71,7 @@ class _TaskScreenState extends State<TaskScreen> {
           },
           icon: Icon(Icons.arrow_back),
         ),
-        title: Text('Add Tasks'),
+        title: Text(LocaleKeys.add_task.tr()),
         centerTitle: true,
         actions: [
           IconButton(
